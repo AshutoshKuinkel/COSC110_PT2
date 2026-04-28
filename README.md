@@ -10,7 +10,7 @@ The program has been packaged in the form of a tarball, preserving all the curre
 This was done using the command:
 
 ```bash
-tar -zc FILL OUT THIS > pt2.tgz
+tar -zc revenue.py sales.txt readme.md > pt2.tgz
 ```
 
 where z - puts archive through gzip & c - creates archive
