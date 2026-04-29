@@ -4,3 +4,5 @@ from tkinter import ttk;
 
 root = tk.Tk()
 root.title("Pool Revenue Simulator")
+
+root.mainloop()
