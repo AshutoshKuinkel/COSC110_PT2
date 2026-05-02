@@ -30,4 +30,7 @@ Let's dive through how each of the following requirements listed have been accom
 
 
 ## References:
+- https://www.w3schools.com/python/python_args_kwargs.asp
+- https://www.w3schools.com/python/ref_string_split.asp
+- https://www.geeksforgeeks.org/python/break-list-chunks-size-n-python/
 ...
