@@ -41,7 +41,7 @@ def process_sales() -> list[list]:
   
 # Helper to calculate total revenue:
 # TO DO: SET DEFAULT VALUES OF THESE TO WHAT THEY WERE IN AT1:
-def calc_total(fam_pass:float,adult:float,child:float)-> float:
+def calc_total(fam_pass:float,adult:float,child:float)-> float | None :
   '''
   Outputs total revenue by adding all revenue of all individual transactions.
   
@@ -51,10 +51,12 @@ def calc_total(fam_pass:float,adult:float,child:float)-> float:
     child (float): User set price of child ticket.
   
   Returns:
-    (float): Total revenue for all transactions.  
+    (float | None): Total revenue for all transactions, (None if transaction file missing).
   '''
   
   sales = process_sales()
+  if not sales:
+    return None
   fam_p=0
   ad=0
   ch=0
@@ -63,23 +65,27 @@ def calc_total(fam_pass:float,adult:float,child:float)-> float:
     fam_p += (fam_pass * transaction[1])
     ad += (adult * transaction[2])
     ch += (child * transaction[3])
-  return round((fam_p + ad + ch),2)
+  return float(fam_p + ad + ch)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 root = tk.Tk()
 root.title("Pool Revenue Simulator")
+root.columnconfigure(0,weight=1)
+root.rowconfigure(0,weight=1)
+root.geometry("600x330")
 
 frame = ttk.Frame(root, padding=10)
 frame.grid(column = 0, row = 0,sticky="NSEW")
-frame.grid_columnconfigure(0,weight=1)
-frame.grid_columnconfigure(1,weight=1)
+frame.grid_columnconfigure(0, weight=1)
+frame.grid_columnconfigure(1, weight=3)
 
 # Creating all widgets required:
-label = ttk.Label(frame,
+label = tk.Label(frame,
                   text="Welcome to CodeTown Public Pool\n Revenue Calculator!",
                   justify='center',
-                  font=("Arial",30,"bold"),
+                  anchor='center',
+                  font=("Arial",24,"bold"),
                   foreground="white",
                   background="blue")
 
@@ -99,45 +105,54 @@ child_label = ttk.Label(frame,text="Child Ticket Price:")
 
 child_entry = ttk.Entry(frame)
 
+result_var = tk.StringVar()
+
+result_label = ttk.Label(frame,
+                textvariable=result_var,
+                font=("Arial",18),
+                foreground="green"
+                )
+
 def on_submit() -> None:
   '''
   Write up docstring..
   '''
   try:
     # either checking user has entered appropriate values else using default values from AT1, as outlined in assingment description:
-    fam_pass_price = float(fam_pass_entry.get()) if float(fam_pass_entry.get()) else 16.00  
-    adult_price = float(adult_entry.get()) if float(adult_entry.get()) else 5.00
-    child_price = float(child_entry.get()) if float(child_entry.get()) else 4.00
+    fam_pass_price = float(fam_pass_entry.get() or 16.00)
+    adult_price = float(adult_entry.get() or 5.00)
+    child_price = float(child_entry.get() or 4.00)
     
     # Enforce non-negative price rules, in accordance with AT2 task description:
     bad_entry = False
     if (fam_pass_price < 0 or adult_price < 0 or child_price < 0):
       bad_entry = True
       messagebox.showerror("Input Error:","Error: All prices must be non-negative.")
+    
+    # Prevent calculation in the event of missing file:
+    total = calc_total(fam_pass_price,adult_price,child_price)
+    if total is None:
+      bad_entry = True
       
     # output message:
     if(not bad_entry):
-      rev_message = ttk.Label(frame,
-                text = (f"Total Revenue: ${calc_total(fam_pass_price,adult_price,child_price):.2f}"),
-                font=("Arial",18),
-                foreground="green"
-                )
-      rev_message.grid(column=0,row=6,columnspan=2)
+      result_var.set(f"Total Revenue: ${total:.2f}")
   except ValueError:
     messagebox.showerror("ValueError:","Error: Prices must be numeric.")
 
 button = ttk.Button(frame,text="Calculate Revenue",command=on_submit)
 
-# placing all widgets with grid:
-label.grid(column = 0, row = 0,columnspan=2,sticky="ew")
+# placing all widgets with grid:    
+label.grid(column = 0, row = 0,columnspan=2,sticky="nsew")
 prompt_label.grid(column=0,row=1,columnspan=2,pady=7)
-fam_pass_label.grid(column=0,row=2,pady=5,sticky="e")
-fam_pass_entry.grid(column=1,row=2,sticky="w")
-adult_label.grid(column=0,row=3,pady=5,sticky="e")
-adult_entry.grid(column=1,row=3,sticky="w")
-child_label.grid(column=0,row=4,padx=5,pady=5,sticky="e")
-child_entry.grid(column=1,row=4,sticky="w")
+fam_pass_label.grid(column=0, row=2, sticky="e", padx=5)
+fam_pass_entry.grid(column=1, row=2, sticky="ew", padx=5,pady=5)
+adult_label.grid(column=0, row=3, sticky="e", padx=5)
+adult_entry.grid(column=1, row=3, sticky="ew", padx=5,pady=5)
+child_label.grid(column=0, row=4, sticky="e", padx=5)
+child_entry.grid(column=1, row=4, sticky="ew", padx=5,pady=5)
 button.grid(pady=15,column=0,row=5,columnspan=2)
+result_label.grid(column=0, row=6, columnspan=2)
 
 
 
