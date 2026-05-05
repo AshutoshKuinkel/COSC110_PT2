@@ -40,7 +40,6 @@ def process_sales() -> list[list]:
     messagebox.showerror("File Error","Error: sales.txt not found. Please ensure the file is in the same directory.")
   
 # Helper to calculate total revenue:
-# TO DO: SET DEFAULT VALUES OF THESE TO WHAT THEY WERE IN AT1:
 def calc_total(fam_pass:float,adult:float,child:float)-> float | None :
   '''
   Outputs total revenue by adding all revenue of all individual transactions.
