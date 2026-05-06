@@ -18,8 +18,8 @@ Run revenue.py to experience the GUI system and calculate the total revenue base
 and input prices.
 '''
 
-import tkinter as tk;
-from tkinter import ttk;
+import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 
 # Helper to process sales:
@@ -54,7 +54,8 @@ def process_sales() -> list[list]:
       
       return res
   except FileNotFoundError:
-    # pop up message, this 
+    # pop up message, this is handled using messagebox module rather than alerting user with label
+    # on screen:
     messagebox.showerror("FileNotFoundError",'''Error: sales.txt not found. Please ensure the
                          file is in the same directory.''')
   
@@ -102,9 +103,9 @@ root.columnconfigure(0,weight=1)
 root.rowconfigure(0,weight=1)
 
 # Don't want default window size to be too big or small,
-# this 600x300 resolution seems to work well across all
+# this 600x350 resolution seems to work well across all
 # devices/platforms as a default:
-root.geometry("600x330")
+root.geometry("600x350")
 
 frame = ttk.Frame(root, padding=10)
 frame.grid(column = 0, row = 0,sticky="NSEW")
@@ -127,6 +128,11 @@ prompt_label = ttk.Label(frame,
                          text='''Enter simulation values & press calculate:''',
                          font=("Arial",16))
 
+default_values_label = ttk.Label(frame,
+                         text='''Default Values: Family pass: $16.00, Adult: $5.00, Child: $4.00''',
+                         foreground="grey",
+                         font=("Arial",10))
+
 fam_pass_label = ttk.Label(frame,text="Family Pass Price:")
 
 fam_pass_entry = ttk.Entry(frame)
@@ -144,7 +150,8 @@ result_var = tk.StringVar()
 result_label = ttk.Label(frame,
                 textvariable=result_var,
                 font=("Arial",18),
-                foreground="green"
+                foreground="green",
+                anchor="center"
                 )
 
 def on_submit() -> None:
@@ -171,15 +178,16 @@ def on_submit() -> None:
     if (fam_pass_price < 0 or adult_price < 0 or child_price < 0):
       bad_entry = True
       messagebox.showerror("Input Error:","Error: All prices must be non-negative.")
-    
-    # Prevent calculation in the event of missing file:
-    total = calc_total(fam_pass_price,adult_price,child_price)
-    if total is None:
-      bad_entry = True
       
     # output message:
     if(not bad_entry):
-      result_var.set(f"Total Revenue: ${total:.2f}")
+      total = calc_total(fam_pass_price,adult_price,child_price)
+      
+      # Prevent calculation in the event of missing file:
+      if total is None:
+        bad_entry = True
+      else:
+        result_var.set(f"Total Revenue: ${total:.2f}")
   except ValueError:
     messagebox.showerror("ValueError:","Error: Prices must be numeric.")
 
@@ -191,14 +199,15 @@ button = ttk.Button(frame,text="Calculate Revenue",command=on_submit)
 # have an address in memory but won't be able to be seen):    
 label.grid(column = 0, row = 0,columnspan=2,sticky="nsew")
 prompt_label.grid(column=0,row=1,columnspan=2,pady=7)
-fam_pass_label.grid(column=0, row=2, sticky="e", padx=5)
-fam_pass_entry.grid(column=1, row=2, sticky="ew", padx=5,pady=5)
-adult_label.grid(column=0, row=3, sticky="e", padx=5)
-adult_entry.grid(column=1, row=3, sticky="ew", padx=5,pady=5)
-child_label.grid(column=0, row=4, sticky="e", padx=5)
-child_entry.grid(column=1, row=4, sticky="ew", padx=5,pady=5)
-button.grid(pady=15,column=0,row=5,columnspan=2)
-result_label.grid(column=0, row=6, columnspan=2)
+default_values_label.grid(column=0,row=2,columnspan=2)
+fam_pass_label.grid(column=0, row=3, sticky="e", padx=5)
+fam_pass_entry.grid(column=1, row=3, sticky="ew", padx=5,pady=5)
+adult_label.grid(column=0, row=4, sticky="e", padx=5)
+adult_entry.grid(column=1, row=4, sticky="ew", padx=5,pady=5)
+child_label.grid(column=0, row=5, sticky="e", padx=5)
+child_entry.grid(column=1, row=5, sticky="ew", padx=5,pady=5)
+button.grid(pady=15,column=0,row=6,columnspan=2)
+result_label.grid(column=0, row=7, columnspan=2,sticky="ew")
 
 
 root.mainloop()
