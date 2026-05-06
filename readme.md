@@ -60,7 +60,7 @@ cat readme.md
 
 To view sales.txt file, run:
 ```bash
-cat sales.md
+cat sales.txt
 ```
 
 ## How Proposed solution adheres to marking criteria/client requirements:
