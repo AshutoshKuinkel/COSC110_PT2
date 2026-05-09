@@ -24,8 +24,8 @@ tar -zxf pt2.tgz
 ```
 where z - puts archive through gzip, x - extracts from archive (into current directory) & f - refers to name of archive i.e. pt2.tgz
 
-The readme.md & revenue.py & sales.txt files will now be available in your current directory with the appropriate permissions to execute and read 
-[777 permissions for sales.txt with the assumption transaction values may be changed, i.e. for marker convinience ;) ].
+The readme.md & revenue.py & sales.txt files will now be available in the current directory with the appropriate permissions to execute and read 
+(777 permissions for sales.txt with the assumption transaction values may be changed).
 
 The next step is to confirm that you have python3 installed. Assuming our program is being tested on turing, we should already
 have python 3 interpreter installed. To verify that python is installed, run the following command:
