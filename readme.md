@@ -133,4 +133,3 @@ Let's dive through how each of the following requirements listed have been accom
 - https://www.geeksforgeeks.org/python/ternary-operator-in-python/
 - UNE -> COSC110 -> Week 10 (Intro to GUI Programming) content slides.
 - https://www.tcl-lang.org/man/tcl8.6/TkCmd/contents.htm
-...
